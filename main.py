@@ -1,22 +1,26 @@
-from datetime import datetime
+import csv
 
-from influxdb_client import InfluxDBClient, Point, WritePrecision
+from database import Database
+from my_fitness_pal_scraper import MyFitnessPalParser
+from repcount_parser import RepcountParser
 
-# You can generate an API token from the "API Tokens Tab" in the UI
-from influxdb_client.client.write_api import SYNCHRONOUS
 
-token = "fYwCjtTqJk1JUAwuBbNS6NupdjnjXRgKzPnZ_68xebPMxBWq-xAXeG5chf6185KPA6VfM4JBEgN5ZvmY7zvTTg=="
-org = "***REMOVED***"
-bucket = "murraycwatts's Bucket"
+class TaskRunner:
+    def __init__(self):
+        database = Database()
+        write_fn = database.write
+        self.__repcount_parser = RepcountParser(write_fn)
+        self.__mfp_parser = MyFitnessPalParser(write_fn)
 
-client = InfluxDBClient(url="***REMOVED***", token=token, org=org)
-write_api = client.write_api(write_options=SYNCHRONOUS)
+    def run_task(self):
+        with open("repcount_csv_export.csv") as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=",")
+            next(csv_reader)
+            self.__repcount_parser.parse_rows(list(csv_reader))
 
-point = Point("Romanian Dead Lift") \
-    .tag("type", "Deadlift") \
-    .field("Weight", 75) \
-    .field("Unit", "kg") \
-    .field("Reps", 7) \
-    .time(datetime.utcnow(), WritePrecision.NS)
+        self.__mfp_parser.get_daily_summary()
 
-write_api.write(bucket, org, point)
+
+if __name__ == '__main__':
+    tr = TaskRunner()
+    tr.run_task()
