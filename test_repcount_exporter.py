@@ -18,5 +18,9 @@ class TestRepcountExporter(unittest.TestCase):
             self.__repcount_parser.parse_rows(list(reader))
             res = self.__writer_fn.call_args
 
+            for thing in res.args[0]:
+                print(thing.to_line_protocol())
+
             row = res.args[0][0]
+
             self.assertEqual(row.to_line_protocol(), 'High\ Bar\ Squat,unit=kg,workout\ area=Legs,workout\ name=Friday\ workout Lift="High Bar Squat",Reps=1i,Set=1i,Weight=100 1636135440000000000')

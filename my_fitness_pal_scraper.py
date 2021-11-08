@@ -13,7 +13,7 @@ class MyFitnessPalParser:
 
     def get_daily_summary(self):
         today = datetime.date.today()
-        today_with_hours = today + datetime.timedelta(hours=11, minutes=59)
+        today_with_hours = datetime.datetime(today.year, today.month, today.day, 11, 59)
 
         day = self.__client.get_date(today.year, today.month, today.day)
 

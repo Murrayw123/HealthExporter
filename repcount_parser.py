@@ -15,10 +15,10 @@ class CSVPositions(Enum):
 
 def add_set_to_point(current_point, previous_point, previous_row, current_row):
     if current_row[CSVPositions.LIFT.value] == previous_row[CSVPositions.LIFT.value]:
-        previous_set_count = previous_point._fields.get("Set")
-        current_point.field("Set", previous_set_count + 1)
+        previous_set_count = previous_point._tags.get("Set")
+        current_point.tag("Set", previous_set_count + 1)
     else:
-        current_point.field("Set", 1)
+        current_point.tag("Set", 1)
 
     return current_point
 
@@ -52,7 +52,7 @@ class RepcountParser:
             )
 
             if count == 0:
-                point.field("Set", 1)
+                point.tag("Set", 1)
             else:
                 point = add_set_to_point(
                     current_point=point,
