@@ -1,1 +1,5 @@
 influxdb_client
+
+python-dateutil~=2.8.2
+DateTime~=4.3
+myfitnesspal~=1.16.4

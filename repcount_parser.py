@@ -1,6 +1,9 @@
+import csv
 from enum import Enum
 
+import dropbox
 from dateutil import parser
+from dropbox.exceptions import ApiError
 from influxdb_client import Point
 
 
@@ -27,7 +30,23 @@ class RepcountParser:
     def __init__(self, db_writer):
         self.__db_writer = db_writer
 
-    def parse_rows(self, rep_list):
+    def parse_csv(self):
+        with dropbox.Dropbox(
+            oauth2_access_token="***REMOVED***"
+        ) as dbx:
+            try:
+                dbx.files_download_to_file(
+                    "./repcount_csv_export.csv", "/repcount_csv_export.csv"
+                )
+                with open("./repcount_csv_export.csv") as csv_file:
+                    csv_reader = csv.reader(csv_file, delimiter=",")
+                    next(csv_reader)
+                    self.__parse_rows(list(csv_reader))
+                dbx.files_delete_v2("/repcount_csv_export.csv")
+            except ApiError as e:
+                print(e)
+
+    def __parse_rows(self, rep_list):
         points = []
 
         for count, row in enumerate(rep_list):
@@ -62,6 +81,7 @@ class RepcountParser:
                 )
 
             points.append(point)
+            self.__write_points(point)
 
         return self.__write_points(points)
 
