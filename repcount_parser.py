@@ -1,7 +1,9 @@
 import csv
+import re
 from enum import Enum
 
 import dropbox
+import pytz
 from dateutil import parser
 from dropbox.exceptions import ApiError
 from influxdb_client import Point
@@ -12,6 +14,7 @@ class CSVPositions(Enum):
     LIFT = 2
     WEIGHT = 3
     REPS = 4
+    NOTE = 5
     AREA = 9
     TITLE = 10
 
@@ -23,6 +26,12 @@ def add_set_to_point(current_point, previous_point, previous_row, current_row):
     else:
         current_point.tag("Set", 1)
 
+    return current_point
+
+
+def add_rpe_to_point(rpe, current_point):
+    current_rpe = int("".join(filter(str.isdigit, rpe)))
+    current_point.field("RPE", current_rpe)
     return current_point
 
 
@@ -41,12 +50,12 @@ class RepcountParser:
                 with open("./repcount_csv_export.csv") as csv_file:
                     csv_reader = csv.reader(csv_file, delimiter=",")
                     next(csv_reader)
-                    self.__parse_rows(list(csv_reader))
+                    self._parse_rows(list(csv_reader))
                 dbx.files_delete_v2("/repcount_csv_export.csv")
             except ApiError as e:
                 print(e)
 
-    def __parse_rows(self, rep_list):
+    def _parse_rows(self, rep_list):
         points = []
 
         for count, row in enumerate(rep_list):
@@ -56,8 +65,11 @@ class RepcountParser:
             reps = int(row[CSVPositions.REPS.value])
             area = row[CSVPositions.AREA.value]
             title = row[CSVPositions.TITLE.value]
+            note = row[CSVPositions.NOTE.value]
 
             time = parser.parse(timestamp)
+            perth_timezone = pytz.timezone("Australia/Perth")
+            time = perth_timezone.localize(time)
 
             point = (
                 Point(lift)
@@ -79,6 +91,11 @@ class RepcountParser:
                     current_row=row,
                     previous_row=rep_list[count - 1],
                 )
+
+            rpe = re.search("(?i)RPE: [0-9]", note)
+
+            if rpe:
+                point = add_rpe_to_point(rpe=rpe.group(0), current_point=point)
 
             points.append(point)
             self.__write_points(point)

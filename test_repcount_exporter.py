@@ -15,12 +15,12 @@ class TestRepcountExporter(unittest.TestCase):
             reader = csv.reader(repcount_export, delimiter=",")
             next(reader)
 
-            self.__repcount_parser.parse_rows(list(reader))
+            self.__repcount_parser._parse_rows(list(reader))
             res = self.__writer_fn.call_args
-
-            for thing in res.args[0]:
-                print(thing.to_line_protocol())
 
             row = res.args[0][0]
 
-            self.assertEqual(row.to_line_protocol(), 'High\ Bar\ Squat,unit=kg,workout\ area=Legs,workout\ name=Friday\ workout Lift="High Bar Squat",Reps=1i,Set=1i,Weight=100 1636135440000000000')
+            self.assertEqual(
+                row.to_line_protocol(),
+                """Straight\ Leg\ Deadlifts,Set=1,unit=kg,workout\ area=Legs,workout\ name=Saturday Lift="Straight Leg Deadlifts",RPE=6i,Reps=8i,Weight=100 1636770900000000000"""
+            )
