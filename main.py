@@ -25,7 +25,6 @@ class TaskRunner:
 
 if __name__ == "__main__":
     tr = TaskRunner()
-    tr.run_task()
-    # scheduler = BlockingScheduler()
-    # scheduler.add_job(tr.run_task, "interval", seconds=600)
-    # scheduler.start()
+    scheduler = BlockingScheduler()
+    scheduler.add_job(tr.run_task, "interval", seconds=600)
+    scheduler.start()
