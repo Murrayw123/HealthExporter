@@ -1,25 +1,19 @@
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 from typing import List
+from dynaconf import settings
 
 
 class Database:
     def __init__(self):
-        self.__token = "***REMOVED***"
-        self.__org = "***REMOVED***"
-        self.__bucket = "***REMOVED***"
-
         client = InfluxDBClient(
-            url="***REMOVED***",
-            token=self.__token,
-            org=self.__org,
+            url=settings.INFLUXDB_URL,
+            token=settings.INFLUXDB_TOKEN,
+            org=settings.INFLUXDB_ORG,
             debug=True,
         )
 
         self.__write_api = client.write_api(write_options=SYNCHRONOUS)
 
-    def get_bucket(self):
-        return self.__bucket
-
     def write(self, points: Point or List[Point]):
-        self.__write_api.write(org=self.__org, bucket=self.__bucket, record=points)
+        self.__write_api.write(org=settings.INFLUXDB_ORG, bucket=settings.INFLUXDB_BUCKET, record=points)

@@ -1,12 +1,13 @@
 import dropbox
 from dropbox import DropboxOAuth2FlowNoRedirect
+from dynaconf import settings
 
 '''
 This example walks through a basic oauth flow using the existing long-lived token type
 Populate your app key and app secret in order to run this locally
 '''
-APP_KEY = "***REMOVED***"
-APP_SECRET = "***REMOVED***"
+APP_KEY = settings.DROP_BOX_APP_KEY
+APP_SECRET = settings.DROP_BOX_APP_SECRET
 
 auth_flow = DropboxOAuth2FlowNoRedirect(APP_KEY, APP_SECRET)
 

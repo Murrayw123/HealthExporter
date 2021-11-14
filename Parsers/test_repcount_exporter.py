@@ -2,7 +2,7 @@ import csv
 import unittest
 from unittest.mock import Mock
 
-from repcount_parser import RepcountParser
+from Parsers.repcount_parser import RepcountParser
 
 
 class TestRepcountExporter(unittest.TestCase):
@@ -11,7 +11,7 @@ class TestRepcountExporter(unittest.TestCase):
         self.__repcount_parser = RepcountParser(self.__writer_fn)
 
     def test_csv_parse(self):
-        with open("repcount_csv_export.csv") as repcount_export:
+        with open("../TestData/repcount_csv_export.csv") as repcount_export:
             reader = csv.reader(repcount_export, delimiter=",")
             next(reader)
 

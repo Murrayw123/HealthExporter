@@ -6,7 +6,10 @@ import dropbox
 import pytz
 from dateutil import parser
 from dropbox.exceptions import ApiError
+from dynaconf import settings
 from influxdb_client import Point
+
+from Parsers.parser_interface import Parser
 
 
 class CSVPositions(Enum):
@@ -35,23 +38,19 @@ def add_rpe_to_point(rpe, current_point):
     return current_point
 
 
-class RepcountParser:
-    def __init__(self, db_writer):
-        self.__db_writer = db_writer
+REPCOUNT_CSV_FILE = "repcount_csv_export.csv"
 
-    def parse_csv(self):
-        with dropbox.Dropbox(
-            oauth2_access_token="***REMOVED***"
-        ) as dbx:
+
+class RepcountParser(Parser):
+    def parse(self):
+        with dropbox.Dropbox(oauth2_access_token=settings.DROP_BOX_OAUTH_TOKEN) as dbx:
             try:
-                dbx.files_download_to_file(
-                    "./repcount_csv_export.csv", "/repcount_csv_export.csv"
-                )
-                with open("./repcount_csv_export.csv") as csv_file:
+                dbx.files_download_to_file(f"./{REPCOUNT_CSV_FILE}", f"/{REPCOUNT_CSV_FILE}")
+                with open(f"./{REPCOUNT_CSV_FILE}") as csv_file:
                     csv_reader = csv.reader(csv_file, delimiter=",")
                     next(csv_reader)
                     self._parse_rows(list(csv_reader))
-                dbx.files_delete_v2("/repcount_csv_export.csv")
+                dbx.files_delete_v2(f"./{REPCOUNT_CSV_FILE}")
             except ApiError as e:
                 print(e)
 

@@ -2,16 +2,20 @@ import datetime
 
 import myfitnesspal
 from influxdb_client import Point
+from dynaconf import settings
+
+from Parsers.parser_interface import Parser
 
 
-class MyFitnessPalParser:
+class MyFitnessPalParser(Parser):
     def __init__(self, db_writer):
-        self.__db_writer = db_writer
+        super().__init__(db_writer)
+
         self.__client = myfitnesspal.Client(
-            "***REMOVED***", password="***REMOVED***"
+            settings.MYFITNESSPAL_EMAIL, password=settings.MYFITNESSPAL_PASSWORD
         )
 
-    def get_daily_summary(self):
+    def parse(self):
         today = datetime.date.today()
         today_with_hours = datetime.datetime(today.year, today.month, today.day, 11, 59)
 
@@ -29,3 +33,4 @@ class MyFitnessPalParser:
                 )
             )
             self.__db_writer(point)
+
