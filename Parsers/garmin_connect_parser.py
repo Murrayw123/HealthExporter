@@ -27,7 +27,8 @@ if __name__ == "__main__":
 
     parser = GarminConnectParser(thing)
     parser.parse()
-    print ('hello world')
+    print ('hello world 1')
+
 
 
 
