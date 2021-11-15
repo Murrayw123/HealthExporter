@@ -1,4 +1,3 @@
-from Parsers.garmin_connect_parser import GarminConnectParser
 from Parsers.myfitnesspal_parser import MyFitnessPalParser
 from Parsers.repcount_parser import RepcountParser
 
