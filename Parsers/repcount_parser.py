@@ -50,7 +50,7 @@ class RepcountParser(Parser):
                     csv_reader = csv.reader(csv_file, delimiter=",")
                     next(csv_reader)
                     self._parse_rows(list(csv_reader))
-                dbx.files_delete_v2(f"./{REPCOUNT_CSV_FILE}")
+                dbx.files_delete_v2(f"/{REPCOUNT_CSV_FILE}")
             except ApiError as e:
                 print(e)
 
@@ -102,4 +102,4 @@ class RepcountParser(Parser):
         return self.__write_points(points)
 
     def __write_points(self, points):
-        self.__db_writer(points)
+        self._db_writer(points)

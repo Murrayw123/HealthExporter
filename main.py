@@ -1,18 +1,16 @@
 import datetime
-from collections import Callable
 
 from apscheduler.schedulers.blocking import BlockingScheduler
-from influxdb_client import Point
+from dynaconf import settings
 
 from database import Database
-from dynaconf import settings
 
 
 def create_parsers(db_write_fn):
     return [p(db_writer=db_write_fn) for p in settings.PARSERS]
 
 
-class TaskRunner:
+class TaskRunner(object):
     def __init__(self):
         database = Database()
         self.__parsers = create_parsers(db_write_fn=database.write)

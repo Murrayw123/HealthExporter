@@ -4,7 +4,7 @@ from typing import List
 from dynaconf import settings
 
 
-class Database:
+class Database(object):
     def __init__(self):
         client = InfluxDBClient(
             url=settings.INFLUXDB_URL,
@@ -16,4 +16,4 @@ class Database:
         self.__write_api = client.write_api(write_options=SYNCHRONOUS)
 
     def write(self, points: Point or List[Point]):
-        self.__write_api.write(org=settings.INFLUXDB_ORG, bucket=settings.INFLUXDB_BUCKET, record=points)
+        self.__write_api.write(org=settings.INFLUXDB_ORG, bucket=settings.INFLUX_DB_BUCKET, record=points)
