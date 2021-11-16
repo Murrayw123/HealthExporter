@@ -1,7 +1,8 @@
+from Parsers.garmin_parser import GarminConnectParser
 from Parsers.myfitnesspal_parser import MyFitnessPalParser
 from Parsers.repcount_parser import RepcountParser
 
-PARSERS = [MyFitnessPalParser, RepcountParser]
+PARSERS = [MyFitnessPalParser, RepcountParser, GarminConnectParser]
 
 # needed for repcount
 DROP_BOX_APP_KEY = ""

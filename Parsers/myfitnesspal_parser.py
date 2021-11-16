@@ -37,12 +37,14 @@ class MyFitnessPalParser(Parser):
         day = self.__client.get_date(today.year, today.month, today.day)
 
         if day.complete or is_end_of_day(today) or True:
-            weight = float(list(self.__client.get_measurements("Weight").items())[0][1])
+            weight = self.__client.get_measurements("Weight")
+            today_weight = [value for key, value in weight.items() if key == today]
+            today_weight = today_weight[0] if today_weight else None
             point = (
                 Point("Daily Summary")
                 .field("Protein", day.totals.get("protein"))
                 .field("Calories", day.totals.get("calories"))
-                .field("Weight", weight)
+                .field("Weight", today_weight)
                 .time(
                     time=today_with_hours,
                 )
