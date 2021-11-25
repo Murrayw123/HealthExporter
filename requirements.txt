@@ -10,3 +10,5 @@ dropbox~=11.23.0
 pytz~=2021.3
 
 dynaconf~=3.1.7
+
+garminconnect~=0.1.23
