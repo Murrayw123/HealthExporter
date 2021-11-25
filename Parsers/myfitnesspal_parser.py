@@ -36,7 +36,7 @@ class MyFitnessPalParser(Parser):
 
         day = self.__client.get_date(today.year, today.month, today.day)
 
-        if day.complete or is_end_of_day(today) or True:
+        if day.complete or is_end_of_day(today):
             weight = self.__client.get_measurements("Weight")
             today_weight = [value for key, value in weight.items() if key == today]
             today_weight = today_weight[0] if today_weight else None
