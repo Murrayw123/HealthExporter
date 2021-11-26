@@ -22,7 +22,9 @@ python main.py
 ```
 
 ## Hosting
-I use InfluxDB cloud, Grafana Cloud and Heroku because it runs fine on free tier on all of them. There's a procfile included.
+I use InfluxDB cloud, Grafana Cloud and Heroku because it runs fine on free tier on all of them. There's a procfile included. If you're running it on a cloud thing somewhere you'll need to export your env vars with the `DYNACONF` prefix like so 
+
+![img.png](img.png)
 
 
 ## License
