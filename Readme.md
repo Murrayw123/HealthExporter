@@ -6,6 +6,7 @@ Export all your health and lifting metrics to InfluxDB so you can make some pret
 - Garmin **WIP**
 - Google Fit **WIP**
 
+![Don't judge my bench](https://i.ibb.co/F3SNV6W/Capture.png)
 
 ## Local Installation
 1.  Create a virtualenv
